@@ -8,10 +8,10 @@ import java.util.Set;
 
 @Entity
 @PrimaryKeyJoinColumn(name="id")
-public class Manager extends Empleado{
+public class Manager extends Employee {
 
 	@Column
-	private int salaryIncrement;
+	private Double bonusSuccess;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "manager")
@@ -20,17 +20,17 @@ public class Manager extends Empleado{
 	public Manager() {
 	}
 
-	public Manager(String name, int idCard, int salaryIncrement) {
-		super(name, idCard);
-        this.salaryIncrement = salaryIncrement;
+	public Manager(String name, String idCard, EmployeeStatus employeeStatus,Double bonusSuccess) {
+		super(name, idCard, employeeStatus);
+        this.bonusSuccess = bonusSuccess;
 	}
 
-	public int getSalaryIncrement() {
-		return salaryIncrement;
+	public Double getBonusSuccess() {
+		return bonusSuccess;
 	}
 
-	public void setSalaryIncrement(int salaryIncrement) {
-		this.salaryIncrement = salaryIncrement;
+	public void setBonusSuccess(Double bonusSuccess) {
+		this.bonusSuccess = bonusSuccess;
 	}
 
 	public Set<Project> getProjects() {

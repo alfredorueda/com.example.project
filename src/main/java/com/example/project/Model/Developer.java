@@ -8,10 +8,11 @@ import java.util.Set;
 
 @Entity
 @PrimaryKeyJoinColumn(name="id")
-public class Developer extends Empleado{
+public class Developer extends Employee {
 
 	@Column
-	private String category;
+	@Enumerated(EnumType.STRING)
+	private Category category;
 
 	@JsonIgnore
 	@ManyToMany(mappedBy = "developers")
@@ -19,10 +20,10 @@ public class Developer extends Empleado{
 
 	@JsonIgnore
 	@ManyToMany
-	private Set<Speciality> specialities = new HashSet<>();
+	private Set<Specialty> specialties = new HashSet<>();
 
-	public Developer(String name, int idCard, String category) {
-		super(name, idCard);
+	public Developer(String name, String idCard, EmployeeStatus employeeStatus,Category category) {
+		super(name, idCard, employeeStatus);
 		this.category = category;
 	}
 
@@ -30,11 +31,11 @@ public class Developer extends Empleado{
 
 	}
 
-	public String getCategory() {
+	public Category getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(Category category) {
 		this.category = category;
 	}
 
@@ -46,13 +47,15 @@ public class Developer extends Empleado{
 		this.projects = projects;
 	}
 
-	public Set<Speciality> getSpecialities() {
-		return specialities;
+	public Set<Specialty> getSpecialties() {
+		return specialties;
 	}
 
-	public void setSpecialities(Set<Speciality> specialities) {
-		this.specialities = specialities;
+	public void setSpecialties(Set<Specialty> specialties) {
+		this.specialties = specialties;
 	}
+
+
 
 	@Override
 	public String toString() {

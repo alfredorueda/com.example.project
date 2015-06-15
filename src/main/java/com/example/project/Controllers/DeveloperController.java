@@ -1,5 +1,7 @@
 package com.example.project.Controllers;
 
+import com.example.project.Exception.DeveloperException;
+import com.example.project.Exception.SpecialtyException;
 import com.example.project.Model.*;
 import com.example.project.Repositories.DeveloperRepository;
 import com.example.project.Repositories.SpecialityRepository;
@@ -41,24 +43,36 @@ public class DeveloperController {
         return developers;
     }
 
-	@RequestMapping(value="/{idDeveloper}/specialities/{idSpeciality}", method = POST)
-	public Developer addSpeciality(@PathVariable Long idDeveloper, @PathVariable Long idSpeciality) {
+	@RequestMapping(value = "/{id}",method = GET)
+	public Developer getById(@PathVariable Long id){
+		Developer developer = developerRepository.findOne(id);
 
+		if(developer == null)
+			throw new DeveloperException(id);
+
+		return  developer;
+	}
+
+	@RequestMapping(value="/{idDeveloper}/specialties/{idSpeciality}", method = POST)
+	public Developer addSpeciality(@PathVariable Long idDeveloper, @PathVariable Long idSpeciality) {
 		Developer developer = developerRepository.findOne(idDeveloper);
 
 		if(developer == null)
-			throw new ProjectException("The developer id specified does not belong to any developer.");
+			throw new DeveloperException(idDeveloper);
 
-		Speciality speciality = specialityRepository.findOne(idSpeciality);
+		Specialty specialty = specialityRepository.findOne(idSpeciality);
 
-		if(speciality == null)
-			throw new ProjectException("The speciality id specified does not belong to any specility.");
+		if(specialty == null)
+			throw new SpecialtyException(idSpeciality);
 
-		developer.getSpecialities().add(speciality);
+		if(developer.getSpecialties().contains(specialty)){
+			throw new DeveloperException(idDeveloper, idSpeciality);
+		}
+
+		developer.getSpecialties().add(specialty);
 
 		developerRepository.save(developer);
 
 		return developer;
 	}
-
 }

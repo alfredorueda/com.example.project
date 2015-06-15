@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Speciality {
+public class Specialty {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,21 +15,21 @@ public class Speciality {
 	private Long id;
 
 	@Column
-	private String category;
+	private String name;
 
 	@JsonIgnore
-	@ManyToMany(mappedBy = "specialities")
+	@ManyToMany(mappedBy = "specialties")
 	private Set<Developer> developers = new HashSet<>();
 
 	@JsonIgnore
-	@ManyToMany(mappedBy = "specialities")
+	@ManyToMany(mappedBy = "specialties")
 	private Set<Project> projects = new HashSet<>();
 
-	public Speciality() {
+	public Specialty() {
 	}
 
-	public Speciality(String category) {
-		this.category = category;
+	public Specialty(String name) {
+		this.name = name;
 	}
 
 	public Long getId() {
@@ -40,12 +40,12 @@ public class Speciality {
 		this.id = id;
 	}
 
-	public String getCategory() {
-		return category;
+	public String getName() {
+		return name;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Set<Developer> getDevelopers() {
@@ -62,5 +62,21 @@ public class Speciality {
 
 	public void setProjects(Set<Project> projects) {
 		this.projects = projects;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Specialty that = (Specialty) o;
+
+		return id.equals(that.id);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 }

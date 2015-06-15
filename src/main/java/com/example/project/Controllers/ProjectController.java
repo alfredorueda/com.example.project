@@ -1,10 +1,12 @@
 package com.example.project.Controllers;
 
+import com.example.project.Exception.ProjectException;
 import com.example.project.Model.*;
 import com.example.project.Repositories.DeveloperRepository;
 import com.example.project.Repositories.ManagerRepository;
 import com.example.project.Repositories.ProjectRepository;
 import com.example.project.Repositories.SpecialityRepository;
+import com.example.project.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,9 @@ public class ProjectController {
     @Autowired
     private DeveloperRepository developerRepository;
 
+    @Autowired
+    private ProjectService projectService;
+
 	@RequestMapping(method = POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Project save(@RequestBody Project project) {
@@ -57,14 +62,14 @@ public class ProjectController {
 		Project project = projectRepository.findOne(idProject);
 
 		if(project == null)
-			throw new ProjectException("The project id specified does not belong to any project.");
+			throw new ProjectException(idProject);
 
-		Speciality speciality = specialityRepository.findOne(idSpeciality);
+		Specialty specialty = specialityRepository.findOne(idSpeciality);
 
-		if(speciality == null)
-			throw new ProjectException("The speciality id specified does not belong to any speciality.");
+		if(specialty == null)
+			throw new ProjectException(idProject);
 
-		project.getSpecialities().add(speciality);
+		project.getSpecialties().add(specialty);
 
 		projectRepository.save(project);
 
@@ -77,12 +82,12 @@ public class ProjectController {
 		Project project = projectRepository.findOne(idProject);
 
 		if(project == null)
-			throw new ProjectException("The project id specified does not belong to any project.");
+			throw new ProjectException(idProject);
 
 		Manager manager = managerRepository.findOne(idManager);
 
 		if(manager == null)
-			throw new ProjectException("The manager id specified does not belong to any manager.");
+			throw new ProjectException(idProject);
 
 		project.setManager(manager);
 
@@ -94,31 +99,7 @@ public class ProjectController {
     @RequestMapping(value="/{idProject}/developers/{idDeveloper}", method = POST)
     public Project addDeveloper(@PathVariable Long idProject, @PathVariable Long idDeveloper) {
 
-        Project project = projectRepository.findOne(idProject);
-
-        if(project == null)
-            throw new ProjectException("The project id specified does not belong to any project.");
-
-        Developer developer = developerRepository.findOne(idDeveloper);
-
-        if(developer == null)
-            throw new ProjectException("The developer id specified does not belong to any developer.");
-
-
-        Set<Speciality> projectSpecialities = project.getSpecialities();
-
-        boolean specialityRequired = false;
-        for ( Speciality speciality : developer.getSpecialities() ) {
-            if(projectSpecialities.contains(speciality))
-                specialityRequired = true;
-        }
-
-        if(specialityRequired)
-            project.getDevelopers().add(developer);
-        else
-            throw new ProjectException("The developer specified does know any required speciality for the project specified.");
-
-        projectRepository.save(project);
+        Project project = projectService.addDeveloper(idProject, idDeveloper);
 
         return project;
     }
@@ -127,8 +108,9 @@ public class ProjectController {
     public Set<Developer> findDevelopers(@PathVariable Long idProject) {
         Project project = projectRepository.findOne(idProject);
 
-        if(project == null)
-            throw new ProjectException("The project id specified does not belong to any project.");
+        if(project == null) {
+            throw new ProjectException(idProject);
+        }
 
         return project.getDevelopers();
     }
@@ -137,17 +119,10 @@ public class ProjectController {
     public Manager findManager(@PathVariable Long idProject) {
         Project project = projectRepository.findOne(idProject);
 
-        if(project == null)
-            throw new ProjectException("The project id specified does not belong to any project.");
+        if(project == null) {
+            throw new ProjectException(idProject);
+        }
 
         return project.getManager();
     }
-
-
-}
-
-class ProjectException extends RuntimeException {
-	public ProjectException(String message){
-		super(message);
-	}
 }

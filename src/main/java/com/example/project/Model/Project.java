@@ -3,6 +3,8 @@ package com.example.project.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,13 +21,20 @@ public final class Project {
 	@ManyToOne
 	private Manager manager;
 
+	@NotNull
+	@Column(name = "start_date")
+	private Date startDate;
+
+	@Column(name = "end_date")
+	private Date endDate;
+
 	@JsonIgnore
 	@ManyToMany
 	private Set<Developer> developers = new HashSet<>();
 
 	@JsonIgnore
 	@ManyToMany
-	private Set<Speciality> specialities = new HashSet<>();
+	private Set<Specialty> specialties = new HashSet<>();
 
 	public Project(String description) {
 		this.description = description;
@@ -66,11 +75,53 @@ public final class Project {
 		this.developers = developers;
 	}
 
-	public Set<Speciality> getSpecialities() {
-		return specialities;
+	public Set<Specialty> getSpecialties() {
+		return specialties;
 	}
 
-	public void setSpecialities(Set<Speciality> specialities) {
-		this.specialities = specialities;
+	public void setSpecialties(Set<Specialty> specialties) {
+		this.specialties = specialties;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Project project = (Project) o;
+
+        return !(id != null ? !id.equals(project.id) : project.id != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    @Override
+	public String toString() {
+		return "Project{" +
+				"id=" + id +
+				", description='" + description + '\'' +
+				", startDate=" + startDate +
+				", endDate=" + endDate +
+				'}';
 	}
 }

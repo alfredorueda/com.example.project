@@ -1,6 +1,6 @@
 package com.example.project.Controllers;
 
-import com.example.project.Model.Speciality;
+import com.example.project.Model.Specialty;
 import com.example.project.Repositories.SpecialityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,22 +17,22 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
-@RequestMapping("/specialities")
-public class SpecialityController {
+@RequestMapping("/specialties")
+public class SpecialtyController {
 
 	@Autowired
 	private SpecialityRepository specialityRepository;
 
 	@RequestMapping(method = POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Speciality save(@RequestBody Speciality speciality) {
-		return specialityRepository.save(speciality);
+	public Specialty save(@RequestBody Specialty specialty) {
+		return specialityRepository.save(specialty);
 	}
 
 	@RequestMapping(method = GET)
-	public List<Speciality> findAll() {
-		List<Speciality> specialities = new ArrayList<Speciality>();
-		Iterator<Speciality> iterator = specialityRepository.findAll().iterator();
+	public List<Specialty> findAll() {
+		List<Specialty> specialities = new ArrayList<Specialty>();
+		Iterator<Specialty> iterator = specialityRepository.findAll().iterator();
 
 		while(iterator.hasNext()){
 			specialities.add(iterator.next());
