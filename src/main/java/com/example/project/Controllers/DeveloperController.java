@@ -75,4 +75,6 @@ public class DeveloperController {
 
 		return developer;
 	}
+
+	//Este cambio simplemente es una prueba  para ver si coge el parámetro  autor del commit a partir de la configuración específica degit del proyecto no la global del usuario
 }
